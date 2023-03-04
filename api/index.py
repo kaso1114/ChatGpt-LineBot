@@ -9,7 +9,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, Sender
 import os
 
-VERSION = 'v1.2'
+VERSION = 'v1.3'
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 working_status = os.getenv("DEFALUT_TALKING", default = "true").lower() == "true"
@@ -45,15 +45,15 @@ def handle_message(event):
         working_status = True
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=f"我是ChatGPT {VERSION} ，若不需要我，請說 「安靜」 謝謝~", sender=Sender("ChatGPT", icon_url=icon_url))
+            TextSendMessage(text=f"我是ChatGPT {VERSION} ，若不需要我，請說「安靜」或「閉嘴」", sender=Sender(icon_url=icon_url))
         )
         return
 
-    if event.message.text == "安靜":
+    if event.message.text == "安靜" or event.message.text == "閉嘴":
         working_status = False
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="感謝使用ChatGPT，若需要我，請說 「啟動」 謝謝~", sender=Sender("ChatGPT", icon_url=icon_url))
+            TextSendMessage(text="感謝使用ChatGPT，若需要我，請說「啟動」謝謝~", sender=Sender(con_url=icon_url))
         )
         chatgpt.reset_msg()
         return
@@ -63,7 +63,7 @@ def handle_message(event):
         reply_msg = chatgpt.get_response()
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=reply_msg, sender=Sender("ChatGPT", icon_url=icon_url))
+            TextSendMessage(text=reply_msg, sender=Sender(icon_url=icon_url))
         )
 
 
