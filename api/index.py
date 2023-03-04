@@ -6,13 +6,14 @@ except:
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, Sender
 import os
 
-VERSION = 'v1.1'
+VERSION = 'v1.2'
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 working_status = os.getenv("DEFALUT_TALKING", default = "true").lower() == "true"
+icon_url = "https://cdn.dribbble.com/userupload/3963239/file/original-87c1101f959e7c30f19c6fd0c4f5173a.png?compress=1&resize=752x"
 
 app = Flask(__name__)
 chatgpt = ChatGPT()
@@ -44,14 +45,16 @@ def handle_message(event):
         working_status = True
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=f"我是ChatGPT {VERSION} ，若不需要我，請說 「安靜」 謝謝~"))
+            TextSendMessage(text=f"我是ChatGPT {VERSION} ，若不需要我，請說 「安靜」 謝謝~", sender=Sender("ChatGPT", icon_url=icon_url))
+        )
         return
 
     if event.message.text == "安靜":
         working_status = False
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="感謝使用ChatGPT，若需要我，請說 「啟動」 謝謝~"))
+            TextSendMessage(text="感謝使用ChatGPT，若需要我，請說 「啟動」 謝謝~", sender=Sender("ChatGPT", icon_url=icon_url))
+        )
         chatgpt.reset_msg()
         return
 
@@ -60,7 +63,8 @@ def handle_message(event):
         reply_msg = chatgpt.get_response()
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=reply_msg))
+            TextSendMessage(text=reply_msg, sender=Sender("ChatGPT", icon_url=icon_url))
+        )
 
 
 if __name__ == "__main__":
