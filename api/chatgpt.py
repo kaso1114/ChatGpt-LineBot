@@ -3,7 +3,7 @@ import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-PROMPT = f'you are assistant, a helpful assistant, 繁體中文回答'
+PROMPT = f'you are assistant, 你用繁體中文回答'
 
 class ChatGPT:
     def __init__(self) -> None:
@@ -21,12 +21,12 @@ class ChatGPT:
         self.messages = [{'role': 'system', 'content': PROMPT}]
 
     def add_msg(self, text):
-        self.messages.append({'role': 'user', 'content': text})
-
-    def get_response(self):
         if (len(self.messages)-1)/2 >= self.max_user_msg:
             self.messages.pop()     # pop assistant
             self.messages.pop()     # pop user
+        self.messages.append({'role': 'user', 'content': text})
+
+    def get_response(self):
         response = openai.ChatCompletion.create(
             model=self.model,
             messages=self.messages,
