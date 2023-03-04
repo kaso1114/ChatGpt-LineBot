@@ -3,7 +3,7 @@ import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-PROMPT = f'you are assistant, a helpful assistant'
+PROMPT = f'you are assistant, a helpful assistant, 繁體中文回答'
 
 class ChatGPT:
     def __init__(self) -> None:
@@ -14,7 +14,7 @@ class ChatGPT:
         # self.frequency_penalty = float(os.getenv("OPENAI_FREQUENCY_PENALTY", default = 2.0))
         # self.presence_penalty = float(os.getenv("OPENAI_PRESENCE_PENALTY", default = 0.0))
 
-        self.max_user_msg = 6
+        self.max_user_msg = 4
         self.reset_msg()
 
     def reset_msg(self):
