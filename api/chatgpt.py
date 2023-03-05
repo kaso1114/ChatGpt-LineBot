@@ -11,7 +11,6 @@ class ChatGPT:
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1))
         # self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = None))
 
-
         self.max_user_msg = 4
         self.last_prompt_tokens = 0
         self.last_completion_tokens = 0
@@ -27,8 +26,8 @@ class ChatGPT:
 
     def add_msg(self, text):
         if (len(self.messages)-1)/2 >= self.max_user_msg:
-            self.messages.pop()     # pop assistant
-            self.messages.pop()     # pop user
+            self.messages.pop(1)     # pop assistant
+            self.messages.pop(1)     # pop user
         self.messages.append({'role': 'user', 'content': text})
 
     def get_response(self):
