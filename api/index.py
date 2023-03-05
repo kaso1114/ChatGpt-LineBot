@@ -9,7 +9,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, Sender
 import os
 
-VERSION = 'v1.6'
+VERSION = 'v0.7'
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 working_status = os.getenv("DEFALUT_TALKING", default = "true").lower() == "true"
@@ -41,6 +41,15 @@ def handle_message(event):
     if event.message.type != "text":
         return
 
+    if event.message.text == "清除":
+        working_status = True
+        chatgpt.reset_msg()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=f"我是ChatGPT {VERSION}，已清除對話內容，若不需要我，請說「安靜」或「閉嘴」", sender=Sender(icon_url=icon_url))
+        )
+        return
+
     if event.message.text == "啟動":
         working_status = True
         line_bot_api.reply_message(
@@ -61,7 +70,7 @@ def handle_message(event):
     if working_status:
         chatgpt.add_msg(event.message.text)
         gpt_msg = chatgpt.get_response()
-        text = gpt_msg + f"\ncompletion_tokens: {chatgpt.last_completion_tokens}, completion tokens: {chatgpt.last_completion_tokens}"
+        text = gpt_msg + f"\n\nTokens: {chatgpt.last_total_tokens} ({chatgpt.last_prompt_tokens}+{chatgpt.last_completion_tokens})"
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=text, sender=Sender(icon_url=icon_url))

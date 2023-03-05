@@ -8,7 +8,7 @@ class ChatGPT:
     def __init__(self) -> None:
         self.messages = []
         self.model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
-        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 2))
+        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1))
         self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 1024))
 
         self.max_user_msg = 4
