@@ -1,4 +1,5 @@
 import os
+import time
 import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -25,6 +26,8 @@ class ChatGPT:
         self.messages = [{'role': 'system', 'content': developer_mode + " 請用中文回覆"}]
 
     def add_msg(self, text):
+        while self.messages[-1]['role'] == 'user':
+            time.sleep(1)
         if (len(self.messages)-1)/2 >= self.max_user_msg:
             self.messages.pop(1)     # pop assistant
             self.messages.pop(1)     # pop user
