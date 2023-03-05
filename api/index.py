@@ -9,7 +9,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, Sender
 import os
 
-VERSION = 'v1.0'
+VERSION = 'v1.1'
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 working_status = os.getenv("DEFALUT_TALKING", default = "true").lower() == "true"
@@ -39,6 +39,15 @@ def handle_message(event):
     global working_status
 
     if event.message.type != "text":
+        return
+
+    if event.message.text == "root":
+        working_status = True
+        chatgpt.enable_root()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=f"我是ChatGPT {VERSION}，啟動開發者模式，若不需要我，請說「安靜」或「閉嘴」", sender=Sender(icon_url=icon_url))
+        )
         return
 
     if event.message.text == "清除":
