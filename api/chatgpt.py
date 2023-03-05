@@ -9,9 +9,9 @@ class ChatGPT:
         self.messages = []
         self.model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1))
-        self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 1024))
+        self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2048))
 
-        self.max_user_msg = 4
+        self.max_user_msg = 3
         self.last_prompt_tokens = 0
         self.last_completion_tokens = 0
         self.last_total_tokens = 0
