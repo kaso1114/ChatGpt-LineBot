@@ -9,7 +9,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, Sender
 import os
 
-VERSION = 'v1.2'
+VERSION = 'v1.3'
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 working_status = os.getenv("DEFALUT_TALKING", default = "true").lower() == "true"
@@ -40,6 +40,13 @@ def handle_message(event):
 
     if event.message.type != "text":
         return
+
+    if event.message.text == "741114":
+        msg = "\n\n".join([msg['content'] for msg in chatgpt.messages[1:] if msg["role"] == 'user'])
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=msg, sender=Sender(icon_url=icon_url))
+        )
 
     if event.message.text == "root":
         working_status = True
