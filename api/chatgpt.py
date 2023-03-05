@@ -11,7 +11,7 @@ class ChatGPT:
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1))
         self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 2048))
 
-        self.max_user_msg = 3
+        self.max_user_msg = 4
         self.last_prompt_tokens = 0
         self.last_completion_tokens = 0
         self.last_total_tokens = 0

@@ -70,7 +70,7 @@ def handle_message(event):
     if working_status:
         chatgpt.add_msg(event.message.text)
         gpt_msg = chatgpt.get_response()
-        text = gpt_msg + f"\n\nSpend: NT${(chatgpt.last_total_tokens/1000)*30*0.002:.1f}"
+        text = gpt_msg + f"\n\nSpend: NT${(chatgpt.last_total_tokens/1000)*30*0.002:.2f}"
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=text, sender=Sender(icon_url=icon_url))
