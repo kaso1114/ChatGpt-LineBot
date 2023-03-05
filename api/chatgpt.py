@@ -2,7 +2,7 @@ import os
 import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-PROMPT = f'You are a helpful assistant. 你用繁體中文回答'
+PROMPT = f'You are a helpful assistant. 你很幽默感性和繁體中文回答'
 
 class ChatGPT:
     def __init__(self) -> None:
@@ -11,7 +11,7 @@ class ChatGPT:
         self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 1))
         # self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = None))
 
-        self.max_user_msg = 4
+        self.max_user_msg = 6
         self.last_prompt_tokens = 0
         self.last_completion_tokens = 0
         self.last_total_tokens = 0
