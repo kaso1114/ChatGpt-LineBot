@@ -47,6 +47,7 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=msg, sender=Sender(icon_url=icon_url))
         )
+        return
 
     if event.message.text == "root":
         working_status = True
