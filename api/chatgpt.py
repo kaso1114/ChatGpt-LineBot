@@ -2,19 +2,19 @@ import os
 import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-PROMPT = f'you are assistant, 你用繁體中文回答'
+PROMPT = f'You are a helpful assistant. 你用繁體中文回答'
 
 class ChatGPT:
     def __init__(self) -> None:
-        self.model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
         self.messages = []
-        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 0.7))
+        self.model = os.getenv("OPENAI_MODEL", default = "gpt-3.5-turbo")
+        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 2))
         self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 1024))
-        # self.frequency_penalty = float(os.getenv("OPENAI_FREQUENCY_PENALTY", default = 2.0))
-        # self.presence_penalty = float(os.getenv("OPENAI_PRESENCE_PENALTY", default = 0.0))
 
         self.max_user_msg = 4
+        self.last_prompt_tokens = 0
+        self.last_completion_tokens = 0
+        self.last_total_tokens = 0
         self.reset_msg()
 
     def reset_msg(self):
@@ -32,10 +32,14 @@ class ChatGPT:
             messages=self.messages,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
-            # top_p=0.6,
-            # frequency_penalty=2.0,  # 降低出现频繁的单词的权重
-            # presence_penalty=0.0,  # 降低不常出现的单词的权重
         )
+
+        # Get content
         content = response["choices"][0]["message"]["content"]
         self.messages.append({'role': 'assistant', 'content': content})
+
+        # Get token
+        self.last_prompt_tokens = response["usage"]["prompt_tokens"]
+        self.last_completion_tokens = response["usage"]["completion_tokens"]
+        self.last_total_tokens = response["usage"]["total_tokens"]
         return content
